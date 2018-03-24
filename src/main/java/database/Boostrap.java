@@ -6,10 +6,10 @@ import java.sql.Statement;
 
 import static database.Constants.Schemas.SCHEMAS;
 
-public class Bootstrap {
+public class Boostrap {
 
     public static void main(String args[]) throws SQLException {
-        dropAll();
+        //dropAll();
 
         bootstrapTables();
     }
