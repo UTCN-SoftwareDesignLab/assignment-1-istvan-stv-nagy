@@ -8,7 +8,7 @@ public interface ClientRepository {
 
     Client findById(Long id) throws EntityNotFoundException;
 
-    boolean create(Client client) throws SQLException;
+    boolean create(Client client);
 
     boolean update(Long clientID, Client newClient);
 }

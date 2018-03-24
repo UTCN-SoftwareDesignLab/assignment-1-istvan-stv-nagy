@@ -16,15 +16,15 @@ public class Boot {
 
     public static void main(String args[]) {
 
-        EmployeeService service = new EmployeeServiceImpl(new ClientRepositoryMySQL(new JDBConnectionWrapper("bank_test").getConnection()));
+        EmployeeService service = new EmployeeServiceImpl(
+                new ClientRepositoryMySQL(new JDBConnectionWrapper("bank_test").getConnection()),
+                new AccountRepositoryMySQL(new JDBConnectionWrapper("bank_test").getConnection()));
 
-        Client client = new ClientBuilder()
-                .setName("Adam")
-                .setAddress("Zalau")
-                .setIDNumber("7961130314")
-                .build();
+        Notification n = service.transfer(1L, 2L, 10.00);
 
-        Notification n = service.create(client);
+        System.out.println(n.getMessage());
+
+        n = service.delete(5L);
 
         System.out.println(n.getMessage());
 

@@ -17,34 +17,37 @@ public class ClientRepositoryMySQL implements ClientRepository {
     }
 
     @Override
-    public Client findById(Long id) {
+    public Client findById(Long id) throws EntityNotFoundException {
         try {
-            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM client WHERE id = ?");
+            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM client WHERE client_id = ?");
             findStatement.setLong(1, id);
             ResultSet rs = findStatement.executeQuery();
             if (rs.next()) {
                 return new ClientBuilder()
-                        .setId(rs.getLong("id"))
+                        .setId(rs.getLong("client_id"))
                         .setIDNumber(rs.getString("idNumber"))
                         .setName(rs.getString("name"))
                         .setAddress(rs.getString("address"))
                         .build();
             }
             else throw new EntityNotFoundException(id, "Client");
-        } catch (SQLException | EntityNotFoundException e) {
-            e.printStackTrace();
-            return null;
+        } catch (SQLException e) {
+            throw new EntityNotFoundException(id, "Client");
         }
     }
 
     @Override
-    public boolean create(Client client) throws SQLException {
-        PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO client values(null, ?, ?, ?)");
-        insertStatement.setString(1, client.getName());
-        insertStatement.setString(2, client.getIdNumber());
-        insertStatement.setString(3, client.getAddress());
-        insertStatement.executeUpdate();
-        return true;
+    public boolean create(Client client){
+        try {
+            PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO client values(null, ?, ?, ?)");
+            insertStatement.setString(1, client.getName());
+            insertStatement.setString(2, client.getIdNumber());
+            insertStatement.setString(3, client.getAddress());
+            insertStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     @Override

@@ -12,7 +12,7 @@ public class AccountBuilder {
         this.account = new Account();
     }
 
-    public AccountBuilder setId(int id) {
+    public AccountBuilder setId(Long id) {
         account.setId(id);
         return this;
     }

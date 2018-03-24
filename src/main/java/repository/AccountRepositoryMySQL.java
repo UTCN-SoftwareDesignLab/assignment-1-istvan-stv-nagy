@@ -1,9 +1,12 @@
 package repository;
 
 import model.Account;
+import model.builder.AccountBuilder;
+import model.builder.ClientBuilder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AccountRepositoryMySQL implements AccountRepository {
@@ -12,6 +15,26 @@ public class AccountRepositoryMySQL implements AccountRepository {
 
     public AccountRepositoryMySQL(Connection connection) {
         this.connection = connection;
+    }
+
+    @Override
+    public Account findById(Long id) throws EntityNotFoundException{
+        try {
+            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM account WHERE account_id = ?");
+            findStatement.setLong(1, id);
+            ResultSet rs = findStatement.executeQuery();
+            if (rs.next()) {
+                return new AccountBuilder()
+                        .setId(rs.getLong("account_id"))
+                        .setType(rs.getString("type"))
+                        .setBalance(rs.getDouble("balance"))
+                        .setCreationDate(rs.getDate("creationDate"))
+                        .build();
+            }
+            else throw new EntityNotFoundException(id, "Account");
+        } catch (SQLException e) {
+            throw new EntityNotFoundException(id, "Account");
+        }
     }
 
     @Override
@@ -25,6 +48,35 @@ public class AccountRepositoryMySQL implements AccountRepository {
 
             insertStatement.executeUpdate();
             return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(Long accountID, Account newAccount) {
+        try {
+            PreparedStatement updateStatement = connection.prepareStatement("UPDATE account SET `type`=?, balance=?, creationDate=? WHERE account_id = " + accountID);
+            updateStatement.setString(1, newAccount.getType());
+            updateStatement.setDouble(2, newAccount.getBalance());
+            updateStatement.setDate(3, newAccount.getCreationDate());
+            updateStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean delete(Long accountID) throws EntityNotFoundException {
+        try {
+            PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM account WHERE account_id = ?");
+            deleteStatement.setLong(1, accountID);
+            if (deleteStatement.executeUpdate() != 0)
+                return true;
+            else
+                throw new EntityNotFoundException(accountID, "Account");
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
