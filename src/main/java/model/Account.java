@@ -1,12 +1,12 @@
 package model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Account {
 
     private int id;
     private String type;
-    private float balance;
+    private double balance;
     private Date creationDate;
 
     public int getId() {
@@ -25,11 +25,11 @@ public class Account {
         this.type = type;
     }
 
-    public float getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(float balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 

@@ -1,11 +1,22 @@
 package model;
 
+import java.util.List;
+
 public class Client {
 
+    private Long id;
     private String name;
     private String idNumber;
-    private String code;
     private String address;
+    private List<Account> accounts;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -23,14 +34,6 @@ public class Client {
         this.idNumber = idNumber;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -39,13 +42,11 @@ public class Client {
         this.address = address;
     }
 
-    @Override
-    public String toString() {
-        return "Client{" +
-                "name='" + name + '\'' +
-                ", idNumber='" + idNumber + '\'' +
-                ", code='" + code + '\'' +
-                ", address='" + address + '\'' +
-                '}';
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 }

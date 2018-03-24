@@ -2,7 +2,7 @@ package model.builder;
 
 import model.Account;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class AccountBuilder {
 
@@ -22,7 +22,7 @@ public class AccountBuilder {
         return this;
     }
 
-    public AccountBuilder setBalance(float balance) {
+    public AccountBuilder setBalance(double balance) {
         account.setBalance(balance);
         return this;
     }

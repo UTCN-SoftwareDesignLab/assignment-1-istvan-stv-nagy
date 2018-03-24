@@ -1,6 +1,9 @@
 package model.builder;
 
+import model.Account;
 import model.Client;
+
+import java.util.List;
 
 public class ClientBuilder {
 
@@ -8,6 +11,11 @@ public class ClientBuilder {
 
     public ClientBuilder() {
         this.client = new Client();
+    }
+
+    public ClientBuilder setId(Long id) {
+        client.setId(id);
+        return this;
     }
 
     public ClientBuilder setName(String name) {
@@ -20,13 +28,13 @@ public class ClientBuilder {
         return this;
     }
 
-    public ClientBuilder setCode(String code) {
-        client.setCode(code);
+    public ClientBuilder setAddress(String address) {
+        client.setAddress(address);
         return this;
     }
 
-    public ClientBuilder setAddress(String address) {
-        client.setAddress(address);
+    public ClientBuilder setAccounts(List<Account> accounts) {
+        client.setAccounts(accounts);
         return this;
     }
 
