@@ -8,9 +8,11 @@ import repository.security.RightsRolesRepository;
 import repository.user.UserAuthenticationException;
 import repository.user.UserRepository;
 import service.Notification;
+import service.PasswordEncoder;
 
 import java.security.MessageDigest;
 import java.util.Collections;
+import java.util.List;
 
 import static database.Constants.Roles.EMPLOYEE;
 
@@ -26,7 +28,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public User login(String username, String password) throws UserAuthenticationException {
-        return userRepository.findByUsernameAndPassword(username, encodePassword(password));
+        User user =  userRepository.findByUsernameAndPassword(username, PasswordEncoder.encodePassword(password));
+        List<Role> userRoles = rightsRolesRepository.findRolesForUser(user.getId());
+        user.setRoles(userRoles);
+        return user;
     }
 
     @Override
@@ -40,8 +45,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         Notification notification = new Notification();
         UserValidator userValidator = new UserValidator(user);
-        if (userValidator.validate(user)) {
-            user.setPassword(encodePassword(password));
+        if (userValidator.validate()) {
+            user.setPassword(PasswordEncoder.encodePassword(password));
             try {
                 userRepository.create(user);
                 notification.setMessage("User registered");
@@ -55,21 +60,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return notification;
     }
 
-    private String encodePassword(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(password.getBytes("UTF-8"));
-            StringBuilder hexString = new StringBuilder();
 
-            for (int i = 0; i < hash.length; i++) {
-                String hex = Integer.toHexString(0xff & hash[i]);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-
-            return hexString.toString();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-    }
 }

@@ -49,4 +49,13 @@ public class Client {
     public void setAccounts(List<Account> accounts) {
         this.accounts = accounts;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                ", name='" + name + '\'' +
+                ", idNumber='" + idNumber + '\'' +
+                ", address='" + address +
+                '}';
+    }
 }

@@ -1,6 +1,9 @@
 package repository.user;
 
+import model.Client;
+import model.Role;
 import model.User;
+import model.builder.ClientBuilder;
 import model.builder.UserBuilder;
 import repository.security.RightsRolesRepository;
 
@@ -8,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserRepositoryMySQL implements UserRepository {
 
@@ -27,12 +32,15 @@ public class UserRepositoryMySQL implements UserRepository {
             statement.setString(2, password);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                return new UserBuilder()
+                User user =  new UserBuilder()
                         .setId(rs.getLong("id"))
                         .setUsername(rs.getString("username"))
                         .setPassword(rs.getString("password"))
                         .setRoles(rightsRolesRepository.findRolesForUser(rs.getLong("id")))
                         .build();
+                for (Role r : user.getRoles())
+                    user.addRights(rightsRolesRepository.findRightsForRole(r.getId()));
+                return user;
             } else {
                 throw new UserAuthenticationException("Invalid username or password!");
             }
@@ -65,5 +73,24 @@ public class UserRepositoryMySQL implements UserRepository {
         } catch (SQLException e) {
             throw new UserAuthenticationException("Failed to register!");
         }
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        List<User> users = new ArrayList<>();
+        try {
+            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM users");
+            ResultSet rs = findStatement.executeQuery();
+            while (rs.next()) {
+                User user = new UserBuilder()
+                        .setId(rs.getLong("id"))
+                        .setUsername(rs.getString("username"))
+                        .build();
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 }

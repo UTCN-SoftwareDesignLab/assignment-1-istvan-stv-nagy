@@ -1,5 +1,6 @@
 package model.builder;
 
+import model.Right;
 import model.Role;
 import model.User;
 
@@ -30,6 +31,11 @@ public class UserBuilder {
 
     public UserBuilder setRoles(List<Role> roles) {
         user.setRoles(roles);
+        return this;
+    }
+
+    public UserBuilder setRights(List<Right> rights) {
+        user.setRights(rights);
         return this;
     }
 

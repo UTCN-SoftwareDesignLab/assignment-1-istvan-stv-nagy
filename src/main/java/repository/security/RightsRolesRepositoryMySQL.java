@@ -26,7 +26,7 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
             insertStatement.setString(1, role);
             insertStatement.executeUpdate();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -38,7 +38,7 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
             insertStatement.setString(1, right);
             insertStatement.executeUpdate();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -105,7 +105,7 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
                 insertUserRoleStatement.executeUpdate();
             }
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -122,9 +122,28 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
             }
             return roles;
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public List<Right> findRightsForRole(Long roleId) {
+        List<Right> rights = new ArrayList<>();
+        try {
+            PreparedStatement findStatement = connection.prepareStatement("SELECT right.id, right.right FROM `right`\n" +
+                    " JOIN role_right ON `right`.id = role_right.right_id\n" +
+                    " JOIN role ON role_right.role_id = role.id\n" +
+                    " WHERE role.id = ?;");
+            findStatement.setLong(1, roleId);
+            ResultSet rs = findStatement.executeQuery();
+            while (rs.next()) {
+                rights.add(new Right(rs.getLong("right.id"), rs.getString("right.right")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rights;
     }
 
     @Override

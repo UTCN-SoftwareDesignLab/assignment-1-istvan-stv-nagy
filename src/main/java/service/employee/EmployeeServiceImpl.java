@@ -1,11 +1,16 @@
-package service;
+package service.employee;
 
 import model.Account;
+import model.Bill;
 import model.Client;
 import model.validator.ClientValidator;
 import repository.AccountRepository;
 import repository.ClientRepository;
 import repository.EntityNotFoundException;
+import service.Notification;
+import service.employee.EmployeeService;
+
+import java.util.List;
 
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -40,6 +45,29 @@ public class EmployeeServiceImpl implements EmployeeService {
             notification.addError("Account not found!");
         }
 
+        return notification;
+    }
+
+    @Override
+    public Notification processBill(Long accountID, Bill bill) {
+        Notification notification = new Notification();
+
+        try {
+            Account payingAccount = findAccountById(accountID);
+            double accountBalance = payingAccount.getBalance();
+            if (accountBalance >= bill.getAmount()) {
+                payingAccount.setBalance(accountBalance - bill.getAmount());
+                if (accountRepository.update(accountID, payingAccount)) {
+                    notification.setMessage("Payment was successful!");
+                } else {
+                    notification.addError("MYSQL error!");
+                }
+            } else {
+                notification.addError("Not enough money to pay the bill!");
+            }
+        } catch (EntityNotFoundException e) {
+            notification.addError("Account not found!");
+        }
 
         return notification;
     }
@@ -115,12 +143,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
+    public List<Client> findAllClients() {
+        return clientRepository.findAll();
+    }
+
+    @Override
     public Client findClientById(Long id) throws EntityNotFoundException {
-        return clientRepository.findById(id);
+        Client client = clientRepository.findById(id);
+        client.setAccounts(accountRepository.findAccountsForClient(client.getId()));
+        return client;
     }
 
     @Override
     public Account findAccountById(Long id) throws EntityNotFoundException {
         return accountRepository.findById(id);
+    }
+
+    @Override
+    public List<Account> findAccountsForClient(Long clientID) {
+        return accountRepository.findAccountsForClient(clientID);
     }
 }

@@ -1,0 +1,252 @@
+JFDML JFormDesigner: "6.0.2.0.116" Java: "1.8.0_152-release" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+			"$layoutConstraints": "hidemode 3"
+			"$columnConstraints": "[fill][fill][fill][fill][fill][fill]"
+			"$rowConstraints": "[][][][][][][][][][][][][][][][][]"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "username"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 0"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "usernameText"
+				"editable": false
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 0,width 200:200:200"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "logoutButton"
+				"text": "Logout"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 4 0"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "name"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 2"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "name"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 2,width 250:250:250"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": "balance"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 2"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "accountBalance"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 3 2,width 250:250:250"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "id number"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 3"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "idNumber"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 3,width 250:250:250"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label6"
+				"text": "type"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 3"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "accountType"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 3 3,width 250:250:250"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "address"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 4"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "address"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 4,width 250:250:250"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "addClientButton"
+				"text": "Add Client"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 6"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "addAccountButton"
+				"text": "Add Account"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 6"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "findClientButton"
+				"text": "Find Client"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 7"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "clientID"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 7,width 100:100:100"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "updateAccountButton"
+				"text": "Update Account"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 7"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "updateClientButton"
+				"text": "Update Client"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 8"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "deleteAccountButton"
+				"text": "Delete Account"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 8"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "findAllClientsButton"
+				"text": "Find All Clients"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 9"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "viewAccountButton"
+				"text": "View Account"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 9"
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "clientTable"
+				} )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 10"
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane2"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "accountTable"
+				} )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 3 10"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label7"
+				"text": "Transfer FROM"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 11"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "transferFromText"
+				"editable": false
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 11"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label10"
+				"text": "Bill description"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 11"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "billDescriptionText"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 3 11"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "transferFromButton"
+				"text": "Transfer FROM"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 12"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "transferFromId"
+				"editable": false
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 12,width 100:100:100"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label11"
+				"text": "Amount to pay"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 12"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "billAmountText"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 3 12"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label8"
+				"text": "Transfer TO"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 13"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "transferToText"
+				"editable": false
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 13"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "transferToButton"
+				"text": "Transfer TO"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 14"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "transferToId"
+				"editable": false
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 14,width 100:100:100"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label9"
+				"text": "Amount"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 15"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "amountText"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 15,width 100:100:100"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "transferButton"
+				"text": "Transfer"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 15"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "payBillButton"
+				"text": "Pay Bill"
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 2 15"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 930, 550 )
+		} )
+	}
+}

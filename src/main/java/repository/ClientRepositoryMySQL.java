@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientRepositoryMySQL implements ClientRepository {
 
@@ -14,6 +16,27 @@ public class ClientRepositoryMySQL implements ClientRepository {
 
     public ClientRepositoryMySQL(Connection connection) {
         this.connection = connection;
+    }
+
+    @Override
+    public List<Client> findAll() {
+        List<Client> clients = new ArrayList<>();
+        try {
+            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM client");
+            ResultSet rs = findStatement.executeQuery();
+            while (rs.next()) {
+                Client client = new ClientBuilder()
+                        .setId(rs.getLong("client_id"))
+                        .setIDNumber(rs.getString("idNumber"))
+                        .setName(rs.getString("name"))
+                        .setAddress(rs.getString("address"))
+                        .build();
+                clients.add(client);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return clients;
     }
 
     @Override

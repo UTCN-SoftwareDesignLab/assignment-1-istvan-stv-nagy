@@ -40,4 +40,13 @@ public class Account {
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "type='" + type + '\'' +
+                ", balance=" + balance +
+                ", creationDate=" + creationDate +
+                '}';
+    }
 }

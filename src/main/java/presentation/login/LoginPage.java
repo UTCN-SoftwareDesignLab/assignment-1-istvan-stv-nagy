@@ -2,7 +2,7 @@
  * Created by JFormDesigner on Sat Mar 24 22:36:10 EET 2018
  */
 
-package presentation;
+package presentation.login;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -24,6 +24,11 @@ public class LoginPage extends JFrame {
         loginButton.setActionCommand("login");
         registerButton.addActionListener(listener);
         loginButton.addActionListener(listener);
+    }
+
+    public void resetPage() {
+        username.setText("");
+        password.setText("");
     }
 
     public void showMessage(String message) {

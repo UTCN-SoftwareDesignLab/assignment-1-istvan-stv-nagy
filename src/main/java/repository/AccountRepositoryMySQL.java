@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountRepositoryMySQL implements AccountRepository {
 
@@ -35,6 +37,27 @@ public class AccountRepositoryMySQL implements AccountRepository {
         } catch (SQLException e) {
             throw new EntityNotFoundException(id, "Account");
         }
+    }
+
+    @Override
+    public List<Account> findAccountsForClient(Long clientID) {
+        List<Account> accounts = new ArrayList<>();
+        try {
+            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM account WHERE client_id = ?");
+            findStatement.setLong(1, clientID);
+            ResultSet rs = findStatement.executeQuery();
+            while (rs.next()) {
+                accounts.add(new AccountBuilder()
+                                .setId(rs.getLong("account_id"))
+                                .setType(rs.getString("type"))
+                                .setBalance(rs.getDouble("balance"))
+                                .setCreationDate(rs.getDate("creationDate"))
+                                .build());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return accounts;
     }
 
     @Override
