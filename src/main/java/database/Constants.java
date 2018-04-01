@@ -11,8 +11,9 @@ public class Constants {
     public static class Schemas {
         public static final String TEST = "bank_test";
         public static final String PRODUCTION = "bank";
+        public static final String JUNIT_TEST = "junit_test";
 
-        public static final String[] SCHEMAS = new String[]{TEST, PRODUCTION};
+        public static final String[] SCHEMAS = new String[]{JUNIT_TEST};
     }
 
     public static class Tables {
@@ -23,8 +24,9 @@ public class Constants {
         public static final String RIGHT = "right";
         public static final String ROLE_RIGHT = "role_right";
         public static final String USER_ROLE = "user_role";
+        public static final String ACTIVITY = "activity";
 
-        public static final String[] ORDERED_TABLES_FOR_CREATION = new String[]{USER, ROLE, RIGHT, ROLE_RIGHT, USER_ROLE, CLIENT, ACCOUNT};
+        public static final String[] ORDERED_TABLES_FOR_CREATION = new String[]{USER, ROLE, RIGHT, ROLE_RIGHT, USER_ROLE, CLIENT, ACCOUNT, ACTIVITY};
     }
 
 

@@ -1,10 +1,13 @@
 package repository.user;
 
+import model.Account;
 import model.Client;
 import model.Role;
 import model.User;
+import model.builder.AccountBuilder;
 import model.builder.ClientBuilder;
 import model.builder.UserBuilder;
+import repository.EntityNotFoundException;
 import repository.security.RightsRolesRepository;
 
 import java.sql.Connection;
@@ -76,6 +79,19 @@ public class UserRepositoryMySQL implements UserRepository {
     }
 
     @Override
+    public boolean update(Long userID, User newUser) {
+        try {
+            PreparedStatement updateStatement = connection.prepareStatement("UPDATE users SET username=? WHERE id = " + userID);
+            updateStatement.setString(1, newUser.getUsername());
+            updateStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
     public List<User> findAllUsers() {
         List<User> users = new ArrayList<>();
         try {
@@ -92,5 +108,38 @@ public class UserRepositoryMySQL implements UserRepository {
             e.printStackTrace();
         }
         return users;
+    }
+
+    @Override
+    public User findById(Long userID) throws EntityNotFoundException {
+        try {
+            PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
+            findStatement.setLong(1, userID);
+            ResultSet rs = findStatement.executeQuery();
+            if (rs.next()) {
+                return new UserBuilder()
+                        .setId(rs.getLong("id"))
+                        .setUsername(rs.getString("username"))
+                        .build();
+            }
+            else throw new EntityNotFoundException(userID, "User");
+        } catch (SQLException e) {
+            throw new EntityNotFoundException(userID, "User");
+        }
+    }
+
+    @Override
+    public boolean delete(Long userID) throws EntityNotFoundException {
+        try {
+            PreparedStatement deleteStatement = connection.prepareStatement("DELETE FROM users WHERE `id` = ?");
+            deleteStatement.setLong(1, userID);
+            if (deleteStatement.executeUpdate() != 0)
+                return true;
+            else
+                throw new EntityNotFoundException(userID, "User");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

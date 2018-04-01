@@ -1,6 +1,7 @@
 package service.employee;
 
 import model.Account;
+import model.Activity;
 import model.Bill;
 import model.Client;
 import repository.EntityNotFoundException;
@@ -17,6 +18,8 @@ public interface EmployeeService {
     Notification create(Client client);
 
     Notification create(Long clientID, Account account);
+
+    void create(Activity activity);
 
     Notification update(Long clientID, Client newClient);
 

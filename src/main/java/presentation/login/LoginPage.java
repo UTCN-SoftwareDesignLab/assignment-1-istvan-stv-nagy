@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import net.miginfocom.swing.*;
+import presentation.CommandType;
 
 /**
  * @author Istvan Nagy
@@ -20,8 +21,8 @@ public class LoginPage extends JFrame {
     }
 
     public void setupButtons(ActionListener listener) {
-        registerButton.setActionCommand("register");
-        loginButton.setActionCommand("login");
+        registerButton.setActionCommand(CommandType.REGISTER.toString());
+        loginButton.setActionCommand(CommandType.LOGIN.toString());
         registerButton.addActionListener(listener);
         loginButton.addActionListener(listener);
     }

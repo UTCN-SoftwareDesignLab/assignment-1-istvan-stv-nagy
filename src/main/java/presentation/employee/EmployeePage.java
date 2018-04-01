@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import net.miginfocom.swing.*;
+import presentation.CommandType;
 
 /**
  * @author Istvan Nagy
@@ -16,7 +17,6 @@ public class EmployeePage extends JFrame {
     public EmployeePage() {
         initComponents();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setVisible(true);
     }
 
     public void close() {
@@ -25,23 +25,23 @@ public class EmployeePage extends JFrame {
     }
 
     public void setupButtons(ActionListener employeeListener, ActionListener loginListener) {
-        addClientButton.setActionCommand("add_client");
-        findClientButton.setActionCommand("find_client");
-        updateClientButton.setActionCommand("update_client");
-        findAllClientsButton.setActionCommand("findall_client");
+        addClientButton.setActionCommand(CommandType.ADD_CLIENT.toString());
+        findClientButton.setActionCommand(CommandType.FIND_CLIENT.toString());
+        updateClientButton.setActionCommand(CommandType.UPDATE_CLIENT.toString());
+        findAllClientsButton.setActionCommand(CommandType.FINDALL_CLIENTS.toString());
 
-        addAccountButton.setActionCommand("add_account");
-        updateAccountButton.setActionCommand("update_account");
-        viewAccountButton.setActionCommand("find_account");
-        deleteAccountButton.setActionCommand("delete_account");
+        addAccountButton.setActionCommand(CommandType.ADD_ACCOUNT.toString());
+        updateAccountButton.setActionCommand(CommandType.UPDATE_ACCOUNT.toString());
+        viewAccountButton.setActionCommand(CommandType.FIND_ACCOUNT.toString());
+        deleteAccountButton.setActionCommand(CommandType.DELETE_ACCOUNT.toString());
 
-        transferButton.setActionCommand("transfer");
-        transferFromButton.setActionCommand("trans-from");
-        transferToButton.setActionCommand("trans-to");
+        transferButton.setActionCommand(CommandType.TRANSFER.toString());
+        transferFromButton.setActionCommand(CommandType.TRANSFER_FROM.toString());
+        transferToButton.setActionCommand(CommandType.TRANSFER_TO.toString());
 
-        payBillButton.setActionCommand("pay_bill");
+        payBillButton.setActionCommand(CommandType.PAY_BILL.toString());
 
-        logoutButton.setActionCommand("logout");
+        logoutButton.setActionCommand(CommandType.LOGOUT.toString());
 
         addClientButton.addActionListener(employeeListener);
         findClientButton.addActionListener(employeeListener);
@@ -90,10 +90,6 @@ public class EmployeePage extends JFrame {
     public Long getSelectedAccountId() {
         int selectedRow = accountTable.getSelectedRow();
         return Long.parseLong(accountTable.getValueAt(selectedRow, 0).toString());
-    }
-
-    public void setUsername(String username) {
-        usernameText.setText(username);
     }
 
     public String getName() {
@@ -164,8 +160,6 @@ public class EmployeePage extends JFrame {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Istvan Nagy
-        label1 = new JLabel();
-        usernameText = new JTextField();
         logoutButton = new JButton();
         label2 = new JLabel();
         name = new JTextField();
@@ -236,14 +230,6 @@ public class EmployeePage extends JFrame {
             "[]" +
             "[]" +
             "[]"));
-
-        //---- label1 ----
-        label1.setText("username");
-        contentPane.add(label1, "cell 0 0");
-
-        //---- usernameText ----
-        usernameText.setEditable(false);
-        contentPane.add(usernameText, "cell 1 0,width 200:200:200");
 
         //---- logoutButton ----
         logoutButton.setText("Logout");
@@ -380,8 +366,6 @@ public class EmployeePage extends JFrame {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner Evaluation license - Istvan Nagy
-    private JLabel label1;
-    private JTextField usernameText;
     private JButton logoutButton;
     private JLabel label2;
     private JTextField name;

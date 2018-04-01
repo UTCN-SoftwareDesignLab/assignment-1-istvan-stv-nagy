@@ -1,0 +1,33 @@
+package presentation;
+
+public enum CommandType {
+
+    ADD_CLIENT,
+    UPDATE_CLIENT,
+    FIND_CLIENT,
+    FINDALL_CLIENTS,
+
+    ADD_ACCOUNT,
+    FIND_ACCOUNT,
+    UPDATE_ACCOUNT,
+    DELETE_ACCOUNT,
+
+    TRANSFER,
+    TRANSFER_FROM,
+    TRANSFER_TO,
+
+    PAY_BILL,
+
+    CREATE_USER,
+    FIND_USER,
+    FINDALL_USERS,
+    DELETE_USER,
+    UPDATE_USER,
+
+    GENERATE_REPORT,
+
+    LOGIN,
+    REGISTER,
+    LOGOUT;
+
+}

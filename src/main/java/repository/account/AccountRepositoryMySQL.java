@@ -1,8 +1,9 @@
-package repository;
+package repository.account;
 
 import model.Account;
 import model.builder.AccountBuilder;
-import model.builder.ClientBuilder;
+import repository.EntityNotFoundException;
+import repository.account.AccountRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,7 +21,7 @@ public class AccountRepositoryMySQL implements AccountRepository {
     }
 
     @Override
-    public Account findById(Long id) throws EntityNotFoundException{
+    public Account findById(Long id) throws EntityNotFoundException {
         try {
             PreparedStatement findStatement = connection.prepareStatement("SELECT * FROM account WHERE account_id = ?");
             findStatement.setLong(1, id);

@@ -1,30 +1,33 @@
 package service.administration;
 
+import model.Activity;
 import model.Client;
 import model.Role;
 import model.User;
-import model.builder.ClientBuilder;
 import model.validator.UserValidator;
+import repository.EntityNotFoundException;
+import repository.activity.ActivityRepository;
 import repository.security.RightsRolesRepository;
 import repository.user.UserAuthenticationException;
 import repository.user.UserRepository;
 import service.Notification;
 import service.PasswordEncoder;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdministratorServiceImpl implements AdministratorService {
 
     private UserRepository userRepository;
     private RightsRolesRepository rightsRolesRepository;
+    private ActivityRepository activityRepository;
 
-    public AdministratorServiceImpl(UserRepository userRepository, RightsRolesRepository rightsRolesRepository) {
+    public AdministratorServiceImpl(UserRepository userRepository, RightsRolesRepository rightsRolesRepository, ActivityRepository activityRepository) {
         this.userRepository = userRepository;
         this.rightsRolesRepository = rightsRolesRepository;
+        this.activityRepository = activityRepository;
     }
 
     @Override
@@ -59,12 +62,41 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
+    public List<Activity> generateReportForUser(Long userID, Date dateFrom, Date dateTo) {
+        return activityRepository.findActivitiesForUser(userID)
+                .parallelStream()
+                .filter(a -> dateFrom.compareTo(a.getDate()) <= 0 && dateTo.compareTo(a.getDate()) >= 0)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Notification update(Long userID, User newUser) {
-        return null;
+        Notification notification = new Notification();
+        if (userRepository.update(userID, newUser)) {
+            notification.setMessage("User " + userID + " updated successfully!");
+        } else {
+            notification.addError("MYSQL error!");
+        }
+        return notification;
     }
 
     @Override
     public Notification delete(Long userID) {
-        return null;
+        Notification notification = new Notification();
+        try {
+            if (userRepository.delete(userID)) {
+                notification.setMessage("User " + userID + " deleted successfully!");
+            } else {
+                notification.addError("MYSQL error!");
+            }
+        } catch (EntityNotFoundException e) {
+            notification.addError("User with id " + userID + " not found!");
+        }
+        return notification;
+    }
+
+    @Override
+    public User findUserById(Long userID) throws EntityNotFoundException {
+        return userRepository.findById(userID);
     }
 }

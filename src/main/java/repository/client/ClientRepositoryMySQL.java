@@ -1,7 +1,9 @@
-package repository;
+package repository.client;
 
 import model.Client;
 import model.builder.ClientBuilder;
+import repository.EntityNotFoundException;
+import repository.client.ClientRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -74,8 +76,9 @@ public class ClientRepositoryMySQL implements ClientRepository {
     }
 
     @Override
-    public boolean update(Long clientID, Client newClient) {
+    public boolean update(Long clientID, Client newClient) throws EntityNotFoundException {
         try {
+            findById(clientID);
             PreparedStatement updateStatement = connection.prepareStatement("UPDATE client SET name=?, idNumber=?, address=? WHERE client_id = " + clientID);
             updateStatement.setString(1, newClient.getName());
             updateStatement.setString(2, newClient.getIdNumber());
@@ -83,7 +86,6 @@ public class ClientRepositoryMySQL implements ClientRepository {
             updateStatement.executeUpdate();
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
             return false;
         }
     }

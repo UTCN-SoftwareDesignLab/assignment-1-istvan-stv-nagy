@@ -6,19 +6,22 @@ package presentation.administration;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import net.miginfocom.swing.*;
+import presentation.CommandType;
 
 /**
  * @author Istvan Nagy
  */
 public class AdministratorPage extends JFrame {
+
     public AdministratorPage() {
         initComponents();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setVisible(true);
     }
 
     public void close() {
@@ -26,14 +29,35 @@ public class AdministratorPage extends JFrame {
         this.dispose();
     }
 
-    public void setupButtons(ActionListener administratorListener, ActionListener loginPageListener) {
-        createUser.setActionCommand("create_user");
-        findAllButton.setActionCommand("findall_users");
+    public String getDateFrom() {
+        return dateFromTextField.getText();
+    }
 
-        logoutButton.setActionCommand("logout");
+    public String getDateTo() {
+        return dateToTextField.getText();
+    }
+
+    public String getUserId() {
+        return userIdTextField.getText();
+    }
+
+    public void setupButtons(ActionListener administratorListener, ActionListener loginPageListener) {
+        createUser.setActionCommand(CommandType.CREATE_USER.toString());
+        findAllButton.setActionCommand(CommandType.FINDALL_USERS.toString());
+        generateButton.setActionCommand(CommandType.GENERATE_REPORT.toString());
+        deleteButton.setActionCommand(CommandType.DELETE_USER.toString());
+        findButton.setActionCommand(CommandType.FIND_USER.toString());
+        updateButton.setActionCommand(CommandType.UPDATE_USER.toString());
+
+        logoutButton.setActionCommand(CommandType.LOGOUT.toString());
 
         createUser.addActionListener(administratorListener);
         findAllButton.addActionListener(administratorListener);
+        generateButton.addActionListener(administratorListener);
+        deleteButton.addActionListener(administratorListener);
+        findButton.addActionListener(administratorListener);
+        updateButton.addActionListener(administratorListener);
+        logoutButton.addActionListener(administratorListener);
 
         logoutButton.addActionListener(loginPageListener);
     }
@@ -45,12 +69,28 @@ public class AdministratorPage extends JFrame {
         revalidate();
     }
 
+    public JTable getUserTable() {
+        return userTable;
+    }
+
+    public void setReportTable(JTable newTable) {
+        this.reportTable = newTable;
+        scrollPane2.setViewportView(reportTable);
+        repaint();
+        revalidate();
+    }
+
     public String getUsername() {
         return usernameField.getText();
     }
 
     public String getPassword() {
         return String.copyValueOf(passwordField.getPassword());
+    }
+
+    public Long getSelectedUserId() {
+        int selectedRow = userTable.getSelectedRow();
+        return Long.parseLong(userTable.getValueAt(selectedRow, 0).toString());
     }
 
     public List<String> getSelectedCheckboxes() {
@@ -78,12 +118,20 @@ public class AdministratorPage extends JFrame {
         employeeCheckbox = new JCheckBox();
         administratorCheckbox = new JCheckBox();
         createUser = new JButton();
+        label3 = new JLabel();
+        dateFromTextField = new JTextField();
         findButton = new JButton();
+        userIdTextField = new JTextField();
+        label4 = new JLabel();
+        dateToTextField = new JTextField();
         updateButton = new JButton();
         deleteButton = new JButton();
+        generateButton = new JButton();
         findAllButton = new JButton();
         scrollPane1 = new JScrollPane();
         userTable = new JTable();
+        scrollPane2 = new JScrollPane();
+        reportTable = new JTable();
 
         //======== this ========
         Container contentPane = getContentPane();
@@ -92,8 +140,12 @@ public class AdministratorPage extends JFrame {
             // columns
             "[fill]" +
             "[fill]" +
+            "[fill]" +
+            "[fill]" +
+            "[fill]" +
             "[fill]",
             // rows
+            "[]" +
             "[]" +
             "[]" +
             "[]" +
@@ -112,7 +164,7 @@ public class AdministratorPage extends JFrame {
 
         //---- logoutButton ----
         logoutButton.setText("Logout");
-        contentPane.add(logoutButton, "cell 2 0");
+        contentPane.add(logoutButton, "cell 5 0");
 
         //---- label2 ----
         label2.setText("password");
@@ -131,9 +183,20 @@ public class AdministratorPage extends JFrame {
         createUser.setText("Create");
         contentPane.add(createUser, "cell 0 4");
 
+        //---- label3 ----
+        label3.setText("date from");
+        contentPane.add(label3, "cell 2 4");
+        contentPane.add(dateFromTextField, "cell 3 4,width 100:100:100");
+
         //---- findButton ----
         findButton.setText("Find");
         contentPane.add(findButton, "cell 0 5");
+        contentPane.add(userIdTextField, "cell 1 5,width 100:100:100");
+
+        //---- label4 ----
+        label4.setText("date to");
+        contentPane.add(label4, "cell 2 5");
+        contentPane.add(dateToTextField, "cell 3 5");
 
         //---- updateButton ----
         updateButton.setText("Update");
@@ -142,6 +205,10 @@ public class AdministratorPage extends JFrame {
         //---- deleteButton ----
         deleteButton.setText("Delete");
         contentPane.add(deleteButton, "cell 0 7");
+
+        //---- generateButton ----
+        generateButton.setText("Generate Report");
+        contentPane.add(generateButton, "cell 2 7");
 
         //---- findAllButton ----
         findAllButton.setText("Find All");
@@ -152,6 +219,12 @@ public class AdministratorPage extends JFrame {
             scrollPane1.setViewportView(userTable);
         }
         contentPane.add(scrollPane1, "cell 1 9");
+
+        //======== scrollPane2 ========
+        {
+            scrollPane2.setViewportView(reportTable);
+        }
+        contentPane.add(scrollPane2, "cell 2 9");
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -167,11 +240,19 @@ public class AdministratorPage extends JFrame {
     private JCheckBox employeeCheckbox;
     private JCheckBox administratorCheckbox;
     private JButton createUser;
+    private JLabel label3;
+    private JTextField dateFromTextField;
     private JButton findButton;
+    private JTextField userIdTextField;
+    private JLabel label4;
+    private JTextField dateToTextField;
     private JButton updateButton;
     private JButton deleteButton;
+    private JButton generateButton;
     private JButton findAllButton;
     private JScrollPane scrollPane1;
     private JTable userTable;
+    private JScrollPane scrollPane2;
+    private JTable reportTable;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

@@ -1,6 +1,7 @@
-package repository;
+package repository.account;
 
 import model.Account;
+import repository.EntityNotFoundException;
 
 import java.util.List;
 

@@ -9,18 +9,6 @@ new FormModel {
 			"$rowConstraints": "[][][][][][][][][][][][][][][][][]"
 		} ) {
 			name: "this"
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label1"
-				"text": "username"
-			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 0"
-			} )
-			add( new FormComponent( "javax.swing.JTextField" ) {
-				name: "usernameText"
-				"editable": false
-			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 1 0,width 200:200:200"
-			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "logoutButton"
 				"text": "Logout"

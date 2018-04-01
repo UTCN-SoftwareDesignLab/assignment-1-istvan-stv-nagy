@@ -1,12 +1,12 @@
 package presentation.employee;
 
-import model.Account;
-import model.Bill;
-import model.Client;
+import model.*;
 import model.builder.AccountBuilder;
+import model.builder.ActivityBuilder;
 import model.builder.BillBuilder;
 import model.builder.ClientBuilder;
 import model.validator.ClientValidator;
+import presentation.CommandType;
 import presentation.factory.TableFactory;
 import repository.EntityNotFoundException;
 import service.Notification;
@@ -16,6 +16,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -28,12 +29,20 @@ public class EmployeeController {
 
     private ActionListener actionListener;
 
-    public EmployeeController(EmployeePage employeePage, EmployeeService employeeService,  ActionListener loginPageListener, String username) {
+    private TableFactory tableFactory;
+
+    private User activeEmployee;
+
+    public EmployeeController(EmployeePage employeePage, EmployeeService employeeService,  ActionListener loginPageListener, TableFactory tableFactory) {
         this.employeePage = employeePage;
         this.employeeService = employeeService;
         this.actionListener = new EmployeeControllerListener();
         employeePage.setupButtons(actionListener, loginPageListener);
-        employeePage.setUsername(username);
+        this.tableFactory = tableFactory;
+    }
+
+    public void setActiveEmployee(User activeEmployee) {
+        this.activeEmployee = activeEmployee;
     }
 
     private Client extractClientFromTable(JTable table) {
@@ -64,6 +73,10 @@ public class EmployeeController {
                 .build();
     }
 
+    public void setVisible(boolean visible) {
+        employeePage.setVisible(visible);
+    }
+
     private class EmployeeControllerListener implements ActionListener {
 
         @Override
@@ -71,8 +84,12 @@ public class EmployeeController {
 
             Notification notification = new Notification();
 
-            switch (actionEvent.getActionCommand()) {
-                case "add_client" :
+            String command = actionEvent.getActionCommand();
+
+            CommandType commandType = CommandType.valueOf(command);
+
+            switch (commandType) {
+                case ADD_CLIENT :
                     Client client = new ClientBuilder()
                             .setName(employeePage.getName())
                             .setIDNumber(employeePage.getIdNumber())
@@ -85,28 +102,28 @@ public class EmployeeController {
                         notification.setErrors(clientValidator.getErrors());
                     }
                     break;
-                case "find_client" :
+                case FIND_CLIENT:
                     Long clientID = Long.parseLong(employeePage.getClientId());
                     try {
                         Client foundClient = employeeService.findClientById(clientID);
                         List<Client> result = new ArrayList<>();
                         result.add(foundClient);
-                        employeePage.setClientTable(new TableFactory().createClientsTable(result));
+                        employeePage.setClientTable(tableFactory.createClientsTable(result));
                     } catch (EntityNotFoundException e) {
                         notification.addError(e.getMessage());
                     }
                     break;
-                case "findall_client" :
+                case FINDALL_CLIENTS:
                     List<Client> clients = employeeService.findAllClients();
-                    employeePage.setClientTable(new TableFactory().createClientsTable(clients));
+                    employeePage.setClientTable(tableFactory.createClientsTable(clients));
                     break;
-                case "update_client" :
+                case UPDATE_CLIENT:
                     clientID = employeePage.getSelectedClientId();
                     Client newClient = extractClientFromTable(employeePage.getClientTable());
-                    employeeService.update(clientID, newClient);
+                    notification = employeeService.update(clientID, newClient);
                     break;
 
-                case "add_account" :
+                case ADD_ACCOUNT:
                     clientID = employeePage.getSelectedClientId();
                     Account newAccount = new AccountBuilder()
                             .setBalance(Double.parseDouble(employeePage.getAccountBalance()))
@@ -115,36 +132,36 @@ public class EmployeeController {
                             .build();
                     notification = employeeService.create(clientID, newAccount);
                     break;
-                case "find_account" :
+                case FIND_ACCOUNT:
                     clientID = employeePage.getSelectedClientId();
                     List<Account> accounts = employeeService.findAccountsForClient(clientID);
-                    employeePage.setAccountTable(new TableFactory().createAccountsTable(accounts));
+                    employeePage.setAccountTable(tableFactory.createAccountsTable(accounts));
                     break;
-                case "delete_account" :
+                case DELETE_ACCOUNT:
                     Long accountID = employeePage.getSelectedAccountId();
                     notification = employeeService.delete(accountID);
                     break;
-                case "update_account" :
+                case UPDATE_ACCOUNT:
                     accountID = employeePage.getSelectedAccountId();
                     notification = employeeService.update(accountID, extractAccountFromTable(employeePage.getAccountTable()));
                     break;
 
-                case "trans-from" :
+                case TRANSFER_FROM:
                     accountID = employeePage.getSelectedAccountId();
                     employeePage.setTransferFromId(accountID);
                     break;
-                case "trans-to" :
+                case TRANSFER_TO:
                     accountID = employeePage.getSelectedAccountId();
                     employeePage.setTransferToId(accountID);
                     break;
-                case "transfer" :
+                case TRANSFER:
                     double amount = Double.parseDouble(employeePage.getAmount());
                     Long accountFromID = Long.parseLong(employeePage.getTransferFromId());
                     Long accountToID = Long.parseLong(employeePage.getTransferToId());
                     notification = employeeService.transfer(accountFromID, accountToID, amount);
                     break;
 
-                case "pay_bill" :
+                case PAY_BILL:
                     accountID = employeePage.getSelectedAccountId();
                     String description = employeePage.getBillDescription();
                     amount = Double.parseDouble(employeePage.getBillAmount());
@@ -155,9 +172,19 @@ public class EmployeeController {
                     notification = employeeService.processBill(accountID, bill);
                     break;
 
-                case "logout" :
+                case LOGOUT:
                     employeePage.close();
                     break;
+            }
+
+            if (notification.getMessage() != null) {
+                Activity activity = new ActivityBuilder()
+                        .setUserId(activeEmployee.getId())
+                        .setAction(commandType.toString())
+                        .setDescription(notification.getMessage())
+                        .setDate(new Date((Calendar.getInstance().getTime()).getTime()))
+                        .build();
+                employeeService.create(activity);
             }
 
             employeePage.showMessage(notification.getMessage());

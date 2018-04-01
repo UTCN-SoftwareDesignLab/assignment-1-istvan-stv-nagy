@@ -1,14 +1,11 @@
 package presentation.login;
 
 import model.User;
+import presentation.CommandType;
 import presentation.administration.AdministratorController;
-import presentation.administration.AdministratorPage;
 import presentation.employee.EmployeeController;
-import presentation.employee.EmployeePage;
 import repository.user.UserAuthenticationException;
 import service.Notification;
-import service.administration.AdministratorService;
-import service.employee.EmployeeService;
 import service.user.AuthenticationService;
 
 import java.awt.event.ActionEvent;
@@ -22,19 +19,28 @@ public class LoginController {
     private ActionListener actionListener;
     //services
     private AuthenticationService authenticationService;
-    private EmployeeService employeeService;
-    private AdministratorService administratorService;
     //sub-controllers
-    //private EmployeeController employeeController;
+    private EmployeeController employeeController;
+    private AdministratorController administratorController;
 
-    public LoginController(LoginPage loginPage, AuthenticationService authenticationService, EmployeeService employeeService, AdministratorService administratorService) {
+    public LoginController(LoginPage loginPage, AuthenticationService authenticationService) {
         this.loginPage = loginPage;
         this.actionListener = new LoginButtonListener();
         loginPage.setupButtons(actionListener);
 
         this.authenticationService = authenticationService;
-        this.employeeService = employeeService;
-        this.administratorService = administratorService;
+    }
+
+    public void setEmployeeController(EmployeeController employeeController) {
+        this.employeeController = employeeController;
+    }
+
+    public void setAdministratorController(AdministratorController administratorController) {
+        this.administratorController = administratorController;
+    }
+
+    public ActionListener getActionListener() {
+        return actionListener;
     }
 
     private class LoginButtonListener implements ActionListener {
@@ -44,30 +50,37 @@ public class LoginController {
             String username;
             String password;
             Notification notification;
-            switch (actionEvent.getActionCommand()) {
-                case "login" :
+
+            String command = actionEvent.getActionCommand();
+
+            CommandType commandType = CommandType.valueOf(command);
+
+            switch (commandType) {
+                case LOGIN:
                     username = loginPage.getUsername();
                     password = String.copyValueOf(loginPage.getPassword());
                     try {
                         User activeUser = authenticationService.login(username, password);
                         loginPage.showMessage("Login successful!");
                         loginPage.setVisible(false);
-                        if (activeUser.hasRoleOf("employee"))
-                            new EmployeeController(new EmployeePage(), employeeService, actionListener, activeUser.getUsername());
+                        if (activeUser.hasRoleOf("employee")) {
+                            employeeController.setVisible(true);
+                            employeeController.setActiveEmployee(activeUser);
+                        }
                         if (activeUser.hasRoleOf("administrator"))
-                            new AdministratorController(new AdministratorPage(), administratorService, actionListener);
+                            administratorController.setVisible(true);
                     } catch (UserAuthenticationException e) {
                         loginPage.showMessage(e.getMessage());
                         loginPage.resetPage();
                     }
                     break;
-                case "register" :
+                case REGISTER:
                     username = loginPage.getUsername();
                     password = String.copyValueOf(loginPage.getPassword());
                     notification = authenticationService.register(username, password);
                     loginPage.showMessage(notification.getMessage());
                     break;
-                case "logout" :
+                case LOGOUT:
                     loginPage.resetPage();
                     loginPage.setVisible(true);
                     break;

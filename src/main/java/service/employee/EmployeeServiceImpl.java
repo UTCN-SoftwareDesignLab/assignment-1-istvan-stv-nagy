@@ -1,14 +1,12 @@
 package service.employee;
 
-import model.Account;
-import model.Bill;
-import model.Client;
+import model.*;
 import model.validator.ClientValidator;
-import repository.AccountRepository;
-import repository.ClientRepository;
+import repository.account.AccountRepository;
+import repository.client.ClientRepository;
 import repository.EntityNotFoundException;
+import repository.activity.ActivityRepository;
 import service.Notification;
-import service.employee.EmployeeService;
 
 import java.util.List;
 
@@ -16,10 +14,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final ClientRepository clientRepository;
     private final AccountRepository accountRepository;
+    private final ActivityRepository activityRepository;
 
-    public EmployeeServiceImpl(ClientRepository clientRepository, AccountRepository accountRepository) {
+    public EmployeeServiceImpl(ClientRepository clientRepository, AccountRepository accountRepository, ActivityRepository activityRepository) {
         this.clientRepository = clientRepository;
         this.accountRepository = accountRepository;
+        this.activityRepository = activityRepository;
     }
 
     @Override
@@ -100,16 +100,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public void create(Activity activity) {
+        activityRepository.create(activity);
+    }
+
+    @Override
     public Notification update(Long clientID, Client newClient) {
         Notification notification = new Notification();
         ClientValidator clientValidator = new ClientValidator(newClient);
         if (!clientValidator.validate()) {
             notification.setErrors(clientValidator.getErrors());
         } else {
-            if (clientRepository.update(clientID, newClient)) {
-                notification.setMessage("Client " + newClient.toString() + " updated successfully!");
-            } else {
-                notification.addError("MYSQL error!");
+            try {
+                if (clientRepository.update(clientID, newClient)) {
+                    notification.setMessage("Client " + newClient.toString() + " updated successfully!");
+                } else {
+                    notification.addError("MYSQL error!");
+                }
+            } catch (EntityNotFoundException e) {
+                notification.addError(e.getMessage());
             }
         }
         return notification;

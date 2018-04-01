@@ -27,6 +27,12 @@ public class Boostrap {
         bootstrapUserData();
     }
 
+    public static void setup() throws SQLException {
+        dropAll();
+        bootstrapTables();
+        bootstrapUserData();
+    }
+
     private static void dropAll() throws SQLException {
         for (String schema : SCHEMAS) {
             System.out.println("Dropping all tables in schema: " + schema);
@@ -45,6 +51,8 @@ public class Boostrap {
                     "DROP TABLE `role`;",
                     "TRUNCATE `account`;",
                     "DROP TABLE `account`;",
+                    "TRUNCATE `activity`;",
+                    "DROP TABLE `activity`",
                     "DROP TABLE  `client`, `users`;"
             };
 

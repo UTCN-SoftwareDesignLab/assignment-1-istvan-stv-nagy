@@ -31,6 +31,21 @@ public class SQLTableCreationFactory {
                         "   ON DELETE CASCADE" +
                         "   ON UPDATE CASCADE);";
 
+            case ACTIVITY:
+                return "CREATE TABLE IF NOT EXISTS activity (" +
+                        " id int(11) NOT NULL AUTO_INCREMENT," +
+                        " user_id int(11) NOT NULL, " +
+                        " action varchar(100) NOT NULL, " +
+                        " description varchar(300) NOT NULL, " +
+                        " activityDate DATETIME NOT NULL, " +
+                        " PRIMARY KEY (id)," +
+                        " INDEX user_id_idx (user_id ASC)," +
+                        " CONSTRAINT user_id " +
+                        "   FOREIGN KEY (user_id) " +
+                        "   REFERENCES users(id) " +
+                        "   ON DELETE CASCADE " +
+                        "   ON UPDATE CASCADE);";
+
             case USER:
                 return "CREATE TABLE IF NOT EXISTS users (" +
                         "  id INT NOT NULL AUTO_INCREMENT," +

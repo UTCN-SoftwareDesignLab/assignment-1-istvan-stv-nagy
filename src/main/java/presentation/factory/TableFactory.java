@@ -1,6 +1,7 @@
 package presentation.factory;
 
 import model.Account;
+import model.Activity;
 import model.Client;
 import model.User;
 
@@ -17,6 +18,9 @@ public class TableFactory {
 
     private static final int USERS_COLUMNS = 2;
     private static final String[] USERS_FIELD = {"id", "username"};
+
+    private static final int ACTIVITIES_COLUMNS = 3;
+    private static final String[] ACTIVITIES_FIELD = {"action", "description", "date"};
 
     public JTable createClientsTable(List<Client> clients) {
         if (clients.size() == 0)
@@ -79,6 +83,28 @@ public class TableFactory {
         for (User user : users) {
             data[row][0] = user.getId().toString();
             data[row][1] = user.getUsername();
+            row++;
+        }
+        table = new JTable(data, columns);
+        return table;
+    }
+
+    public JTable createActivitiesTable(List<Activity> activities) {
+        if (activities.size() == 0)
+            return null;
+        JTable table = null;
+        String columns[] = new String[ACTIVITIES_COLUMNS];
+        int i = 0;
+        for (String fieldName : ACTIVITIES_FIELD) {
+            columns[i] = fieldName;
+            i++;
+        }
+        String data[][] = new String[activities.size()][ACTIVITIES_COLUMNS];
+        int row = 0;
+        for (Activity activity : activities) {
+            data[row][0] = activity.getAction().toString();
+            data[row][1] = activity.getDescription().toString();
+            data[row][2] = activity.getDate().toString();
             row++;
         }
         table = new JTable(data, columns);
