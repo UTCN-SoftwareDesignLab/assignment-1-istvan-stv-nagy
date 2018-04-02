@@ -21,24 +21,31 @@ public class UserValidator {
     }
 
     public boolean validate() {
-        validateUsername(user.getUsername());
-        validatePassword(user.getPassword());
-        return errors.isEmpty();
+        return validateUsername(user.getUsername()) && validatePassword(user.getPassword());
     }
 
-    private void validateUsername(String username) {
+    public boolean validateUsername(String username) {
         if (!Pattern.compile(EMAIL_VALIDATION_REGEX).matcher(username).matches()) {
             errors.add("Invalid email!");
+            return false;
         }
+        return true;
     }
 
-    public void validatePassword(String password) {
-        if (password.length() < MIN_PASS_LENGTH)
+    private boolean validatePassword(String password) {
+        if (password.length() < MIN_PASS_LENGTH) {
             errors.add("Password must be at least of length " + MIN_PASS_LENGTH + " !");
-        if (!containsDigits(password))
+            return false;
+        }
+        if (!containsDigits(password)) {
             errors.add("Password must contain at least 1 digit!");
-        if (!containsSpecialCharacter(password))
+            return false;
+        }
+        if (!containsSpecialCharacter(password)) {
             errors.add("Password must contain at least 1 special character!");
+            return false;
+        }
+        return true;
     }
 
     private boolean containsSpecialCharacter(String s) {

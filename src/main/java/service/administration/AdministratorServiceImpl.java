@@ -72,6 +72,11 @@ public class AdministratorServiceImpl implements AdministratorService {
     @Override
     public Notification update(Long userID, User newUser) {
         Notification notification = new Notification();
+        UserValidator userValidator = new UserValidator(newUser);
+        if (!userValidator.validateUsername(newUser.getUsername())) {
+            notification.setErrors(userValidator.getErrors());
+            return notification;
+        }
         if (userRepository.update(userID, newUser)) {
             notification.setMessage("User " + userID + " updated successfully!");
         } else {
